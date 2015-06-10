@@ -18,6 +18,7 @@ func TestWriteCSV(t *testing.T) {
 		Convey("Headers should be written correctly", func() {
 			csvExporter := NewCSVExportOutput(fields, out)
 			err := csvExporter.WriteHeader()
+
 			So(err, ShouldBeNil)
 			csvExporter.WriteFooter()
 		})

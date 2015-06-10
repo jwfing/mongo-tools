@@ -283,12 +283,14 @@ func (restore *MongoRestore) Restore() error {
 		restore.archive.Demux.NamespaceErrorChan = namespaceErrorChan
 
 		go restore.archive.Demux.Run()
+		// TODO: consume -> receive and discard
 		// consume the new namespace announcement from the demux for all of the special collections
 		// that get cached when being read out of the archive.
 		// The first regular collection found gets pushed back on to the namespaceChan
 		// consume the new namespace announcement from the demux for all of the collections that get cached
 		for {
 			ns, ok := <-namespaceChan
+			// TODO: reword - 'it is possible that the archive'
 			// the archive can have only special collections. In that case we keep reading until
 			// the namespaces are exhausted, indicated by the namespaceChan being closed.
 			if !ok {

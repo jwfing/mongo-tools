@@ -180,10 +180,11 @@ func (demux *Demultiplexer) Open(ns string, out DemuxOut) {
 // RegularCollectionReceiver implements the intents.file interface.
 // RegularCollectionReceivers get paired with RegularCollectionSenders.
 type RegularCollectionReceiver struct {
-	readLenChan      <-chan int
-	readBufChan      chan<- []byte
-	Intent           *intents.Intent
-	Demux            *Demultiplexer
+	readLenChan <-chan int
+	readBufChan chan<- []byte
+	Intent      *intents.Intent
+	Demux       *Demultiplexer
+	// todo: comment explaining why we have this
 	partialReadArray [db.MaxBSONSize]byte
 	partialReadBuf   []byte
 	isOpen           bool
@@ -211,6 +212,7 @@ func (receiver *RegularCollectionReceiver) Read(r []byte) (int, error) {
 	}
 	rLen := len(r)
 	if wLen > rLen {
+		// todo: typo - 'incomming' in lots of places
 		// if the incomming write size is larger then the incomming read buffer then we need to accept
 		// the write in a larger buffer, fill the read buffer, then cache the remainder
 		receiver.partialReadBuf = receiver.partialReadArray[:wLen]
@@ -295,6 +297,7 @@ func (sender *regularCollectionSender) Close() error {
 	return nil
 }
 
+// todo typo
 // SpecialCollectionCache implemnts both DemuxOut as well as intents.file
 type SpecialCollectionCache struct {
 	Intent *intents.Intent
@@ -371,6 +374,7 @@ func (prioritizer *Prioritizer) Get() *intents.Intent {
 		prioritizer.NamespaceErrorChan <- fmt.Errorf("no intent for namespace %v", namespace)
 	} else {
 		if intent.BSONPath != "" {
+			//TODO check for error
 			intent.BSONFile.Open()
 		}
 		prioritizer.NamespaceErrorChan <- nil
